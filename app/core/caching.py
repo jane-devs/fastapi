@@ -1,3 +1,5 @@
+"""DB session and engine initialization for the microservice."""
+
 import hashlib
 from datetime import datetime, timezone
 from typing import Any, Optional, Dict

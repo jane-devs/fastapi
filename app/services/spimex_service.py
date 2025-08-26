@@ -1,3 +1,5 @@
+"""DB session and engine initialization for the microservice."""
+
 from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio import Redis

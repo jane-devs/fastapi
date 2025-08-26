@@ -1,4 +1,5 @@
-# app/db/models.py
+"""DB session and engine initialization for the microservice."""
+
 from __future__ import annotations
 
 from datetime import date, datetime
@@ -6,7 +7,6 @@ from sqlalchemy import Date, Text, TIMESTAMP, MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.schema import Index
 
-# naming convention — чтобы Alembic генерил стабильные имена
 convention = {
     "ix": "ix_%(column_0_label)s",
     "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -14,6 +14,7 @@ convention = {
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
     "pk": "pk_%(table_name)s",
 }
+
 
 class Base(DeclarativeBase):
     """Базовый Declarative класс c naming convention."""

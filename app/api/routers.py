@@ -1,3 +1,5 @@
+"""DB session and engine initialization for the microservice."""
+
 from datetime import date
 from typing import List, Optional
 
@@ -21,7 +23,21 @@ def get_redis() -> Redis:
     return Redis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=False)
 
 
-@router.get("/trading-dates", response_model=TradingDatesResponse)
+@router.get(
+    "/trading-dates",
+    response_model=TradingDatesResponse,
+    summary="Список дат последних торговых дней",
+    description=(
+        "Возвращает N последних уникальных торговых дат (по убыванию). "
+        "`days` обязателен по смыслу (сколько дат показать). "
+        "Результат кешируется до ближайшего 14:11."
+    ),
+    tags=["spimex"],
+    responses={
+        200: {"description": "Успешный ответ со списком дат."},
+        422: {"description": "Ошибка валидации параметра `days`."},
+    },
+)
 async def get_last_trading_dates(
     days: int = Query(settings.DEFAULT_LAST_DATES, ge=1, le=settings.MAX_LAST_DATES),
     session: AsyncSession = Depends(get_session),
@@ -38,7 +54,21 @@ async def get_last_trading_dates(
         raise HTTPException(status_code=422, detail=str(e))
 
 
-@router.get("/dynamics", response_model=List[TradingResult])
+@router.get(
+    "/dynamics",
+    response_model=List[TradingResult],
+    summary="Динамика торгов за период",
+    description=(
+        "Возвращает записи за указанный период. Обязательные параметры: "
+        "`start_date`, `end_date`. Фильтры `oil_id`, `delivery_type_id`, "
+        "`delivery_basis_id` — опциональные. Кеш до 14:11."
+    ),
+    tags=["spimex"],
+    responses={
+        200: {"description": "Список записей торгов."},
+        422: {"description": "Ошибки валидации или слишком длинный период."},
+    },
+)
 async def get_dynamics(
     start_date: date = Query(...),
     end_date: date = Query(...),
@@ -69,7 +99,18 @@ async def get_dynamics(
         raise HTTPException(status_code=422, detail=str(e))
 
 
-@router.get("/trading-results", response_model=List[TradingResult])
+@router.get(
+    "/trading-results",
+    response_model=List[TradingResult],
+    summary="Результаты последнего торгового дня",
+    description=(
+        "Возвращает записи за **последний** торговый день. "
+        "Фильтры `oil_id`, `delivery_type_id`, `delivery_basis_id` — опциональные. "
+        "Кеш до 14:11."
+    ),
+    tags=["spimex"],
+    responses={200: {"description": "Список записей последнего дня."}},
+)
 async def get_trading_results(
     oil_id: Optional[str] = Query(None),
     delivery_type_id: Optional[str] = Query(None),

@@ -1,6 +1,9 @@
+"""DB session and engine initialization for the microservice."""
+
 from datetime import date
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
+
 
 class TradingResult(BaseModel):
     """
@@ -9,7 +12,23 @@ class TradingResult(BaseModel):
     ⚠ Обрати внимание: volume/total/count пока TEXT в БД, поэтому типы здесь str.
     После миграции к числам поменяешь их на int.
     """
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, json_schema_extra={
+        "example": {
+            "id": 123,
+            "exchange_product_id": "1234567",
+            "exchange_product_name": "ДТ Л-0,2-62",
+            "oil_id": "1001",
+            "delivery_basis_id": "AB1",
+            "delivery_basis_name": "Сургут",
+            "delivery_type_id": "1",
+            "volume": "1000",
+            "total": "45000000",
+            "count": "12",
+            "date": "2025-01-15",
+            "created_on": None,
+            "updated_on": None
+        }
+    })
 
     id: int
     exchange_product_id: str

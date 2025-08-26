@@ -1,3 +1,5 @@
+"""DB session and engine initialization for the microservice."""
+
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 

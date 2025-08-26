@@ -1,3 +1,5 @@
+"""DB session and engine initialization for the microservice."""
+
 from pydantic_settings import BaseSettings
 from pydantic import Field
 
