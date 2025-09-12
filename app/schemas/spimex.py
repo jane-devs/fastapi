@@ -8,9 +8,6 @@ from pydantic import BaseModel, Field, ConfigDict
 class TradingResult(BaseModel):
     """
     Публичная схема записи торгов.
-
-    ⚠ Обрати внимание: volume/total/count пока TEXT в БД, поэтому типы здесь str.
-    После миграции к числам поменяешь их на int.
     """
     model_config = ConfigDict(from_attributes=True, json_schema_extra={
         "example": {

@@ -30,7 +30,6 @@ class SpimexService:
         """
         if days <= 0 or days > settings.MAX_LAST_DATES:
             raise ValueError(f"days must be in [1..{settings.MAX_LAST_DATES}]")
-
         key = make_cache_key("last_trading_dates", "v1", {"days": days})
         cached = await cache_get(self.redis, key)
         if cached is not None:
